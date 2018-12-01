@@ -177,6 +177,13 @@ def pair[F[_], A](f1: F[A], f2: F[A])(implicit A: Applicative[F]) =
 
 ---
 
+## Autres typeclasses
+
+- Eq
+- Show
+
+---
+
 ## Typeclasses dans cats
 
 ![Illustration](assets/cats.svg)

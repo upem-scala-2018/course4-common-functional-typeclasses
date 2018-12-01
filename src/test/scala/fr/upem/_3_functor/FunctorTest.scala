@@ -8,14 +8,14 @@ import org.scalatest.{FlatSpec, Matchers}
 class FunctorTest extends FlatSpec with Matchers {
 
   "Functor" should "be available for List" in {
-    // 2.1 Import the right typeclass
+    // 3.1 Import the right typeclass
     implicit val ev: Functor[List] = ???
 
     Functor[List].map(List(1, 2, 3))(i => i + 1) should equal(List(2, 3, 4))
   }
 
   it should "be available for function" in {
-    // 2.2 Import the right typeclass
+    // 3.2 Import the right typeclass
     implicit val ev: Functor[List[Int] => ?] = ???
 
     val lastElem: List[Int] => Int = list => list.reverse.head
@@ -27,7 +27,7 @@ class FunctorTest extends FlatSpec with Matchers {
   }
 
   it should "be available for function with option" in {
-    // 2.3 Make the code safe for empty lists
+    // 3.3 Make the code safe for empty lists
     implicit val ev: Functor[List[Int] => ?] = ???
 
     val lastElem: List[Int] => Option[Int]   = list => list.reverse.headOption
@@ -41,25 +41,25 @@ class FunctorTest extends FlatSpec with Matchers {
   }
 
   it should "be available for HttpHeader" in {
-    // 2.4 Use the HttpHeader Functor
+    // 3.4 Use the HttpHeader Functor
     val mappedHeader = Functor[HttpHeader].map(HttpHeader("content-type", Json))(_ => Xml)
 
     mappedHeader should equal(HttpHeader("content-type", Xml))
   }
 
   "FunctorSyntax" should "be available for HttpHeader" in {
-    // 2.5 Import the functor syntax and un-comment following line
+    // 3.5 Import the functor syntax and un-comment following line
     // HttpHeader("content-type", Json).map(_ => Xml) should equal(HttpHeader("content-type", Xml))
     ???
   }
 
   it should "be available for Tree" in {
-    // 2.6 Implement tree functor and use functor syntax
+    // 3.6 Implement tree functor and use functor syntax
     val empty: Tree[Int] = Leaf
     Functor[Tree].map(empty)(i => i * 2) should equal(Leaf)
   }
 
-  // 2.7 Hard - Implement tree applicative
+  // 3.7 Hard - Implement tree applicative
   "Applicative" should "be available for Tree" in {
     val values    = Node[Int](5, Leaf, Leaf)
     val functions = Node[Int => String](Integer.toString, Leaf, Leaf)
