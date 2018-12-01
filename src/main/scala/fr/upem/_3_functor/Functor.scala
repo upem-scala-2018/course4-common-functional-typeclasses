@@ -20,7 +20,6 @@ object HttpHeader {
 
 }
 
-
 sealed trait Tree[+A]
 
 object Tree {
@@ -28,23 +27,9 @@ object Tree {
   case class Node[A](a: A, l: Tree[A], r: Tree[A]) extends Tree[A]
 
   // 3.6 Implement a Functor instance for Tree
-  implicit val functor: Functor[Tree] = new Functor[Tree] {
-    override def map[A, B](fa: Tree[A])(f: A => B): Tree[B] =
-      fa match {
-        case Leaf          => Leaf
-        case Node(a, l, r) => Node(f(a), map(l)(f), map(r)(f))
-      }
-  }
+  implicit val functor: Functor[Tree] = ???
 
   // 3.7 Hard - Implement an Applicative instance for Tree
-  implicit val applicative: Applicative[Tree] = new Applicative[Tree] {
-    override def pure[A](x: A): Tree[A] = Node(x, Leaf, Leaf)
-    override def ap[A, B](ff: Tree[A => B])(fa: Tree[A]): Tree[B] =
-      (fa, ff) match {
-        case (Leaf, _)                          => Leaf
-        case (_, Leaf)                          => Leaf
-        case (Node(a, la, ra), Node(f, lf, rf)) => Node(f(a), ap(lf)(la), ap(rf)(ra))
-      }
-  }
+  implicit val applicative: Applicative[Tree] = ???
 
 }

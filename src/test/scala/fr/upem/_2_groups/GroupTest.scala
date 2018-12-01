@@ -2,14 +2,15 @@ package fr.upem._2_groups
 
 import cats.data.NonEmptyMap
 import cats.implicits._
-import cats.kernel.{Band, Monoid, Semigroup}
-import fr.upem._2_groups.Codec.{Amv, Mkv, Wmv}
+import cats.kernel.{Band, CommutativeSemigroup, Monoid, Semigroup}
+import fr.upem._2_groups.Format.{Amv, Mkv, Wmv}
+import org.scalacheck.{Arbitrary, Gen}
+import org.scalatest.prop.PropertyChecks
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.collection.immutable.SortedMap
 
-
-class GroupTest extends FlatSpec with Matchers {
+class GroupTest extends FlatSpec with PropertyChecks with Matchers {
 
   "Semigroup" should "combind NonEmptyCaches" in {
     val cache1 = NonEmptyCache(NonEmptyMap("key1" -> "value1", SortedMap.empty))
@@ -31,15 +32,33 @@ class GroupTest extends FlatSpec with Matchers {
     Monoid[Cache].empty should equal(Cache(Map.empty))
   }
 
-  "Band" should "idempotently combine Players" in {
+  implicit val playerArbitrary: Arbitrary[Player] = Arbitrary(Gen.someOf(Format.all).map(f => Player(f.toSet)))
+
+  "Semilattice" should "combine Players" in {
     val player1 = Player(Set(Mkv, Amv))
     val player2 = Player(Set(Mkv, Wmv))
 
     val expected = Player(Set(Mkv, Amv, Wmv))
-    val firstCombine = Band[Player].combine(player1, player2)
-    val secondCombine = Band[Player].combine(firstCombine, player2)
-    val thirdCombine = Band[Player].combine(secondCombine, player2)
-    thirdCombine should equal(expected)
+    Band[Player].combine(player1, player2) should equal(expected)
+  }
+
+  it should "idempotently combine Players" in {
+    forAll { (player1: Player, player2: Player) =>
+      val firstCombine  = Band[Player].combine(player1, player2)
+      val secondCombine = Band[Player].combine(firstCombine, player2)
+      val thirdCombine  = Band[Player].combine(secondCombine, player2)
+
+      thirdCombine should equal(firstCombine)
+    }
+  }
+
+  it should "commutativeley combine Players" in {
+    forAll { (player1: Player, player2: Player) =>
+      val player1Then2 = CommutativeSemigroup[Player].combine(player1, player2)
+      val player2Then1 = CommutativeSemigroup[Player].combine(player2, player1)
+
+      player1Then2 should equal(player2Then1)
+    }
   }
 
 }

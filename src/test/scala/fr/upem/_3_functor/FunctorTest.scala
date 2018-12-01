@@ -1,6 +1,6 @@
 package fr.upem._3_functor
 
-import cats.{Applicative, Functor, Monad}
+import cats.{Applicative, Functor}
 import fr.upem._3_functor.ContentType.{Json, Xml}
 import fr.upem._3_functor.Tree.{Leaf, Node}
 import org.scalatest.{FlatSpec, Matchers}
