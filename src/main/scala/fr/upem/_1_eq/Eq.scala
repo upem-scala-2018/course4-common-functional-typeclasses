@@ -6,6 +6,7 @@ case class Person(name: String, age: Int)
 
 object Person {
 
+  // 1.3 Implement Eq instance for Person
   implicit val eq: Eq[Person] = (x: Person, y: Person) => x == y
 
 }
