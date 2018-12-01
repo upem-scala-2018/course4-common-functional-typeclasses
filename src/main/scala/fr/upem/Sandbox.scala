@@ -1,4 +1,4 @@
-package com.ikempf
+package fr.upem
 
 import cats.Applicative
 import cats.kernel.{CommutativeMonoid, Monoid, Semigroup}
