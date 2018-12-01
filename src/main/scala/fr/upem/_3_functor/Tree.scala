@@ -1,22 +1,6 @@
 package fr.upem._3_functor
 
-import cats.{Applicative, Functor, Monad}
-
-sealed trait ContentType
-
-object ContentType {
-  case object Json extends ContentType
-  case object Xml  extends ContentType
-}
-case class HttpHeader[A](name: String, value: A)
-
-object HttpHeader {
-  // 2.4 Create a functor for HttpHeader on the value side
-  implicit val functor: Functor[HttpHeader] = ???
-  // 2.5 Can you implement an Applicative and a Monad for the HttpHeader
-  // What would be the semantics of pure() and flatMap() ?
-
-}
+import cats.{Applicative, Functor}
 
 sealed trait Tree[+A]
 
@@ -44,13 +28,6 @@ object Tree {
       }
   }
 
-  // 2.8 Hard
-  implicit val monad: Monad[Tree] = new Monad[Tree] {
-    override def pure[A](x: A): Tree[A] = Node(x, Leaf, Leaf)
-
-    override def flatMap[A, B](fa: Tree[A])(f: A => Tree[B]): Tree[B] = ???
-
-    override def tailRecM[A, B](a: A)(f: A => Tree[Either[A, B]]): Tree[B] = ???
-  }
+  // 2.8 Hard - Implement an Applicative instance for Tree
 
 }

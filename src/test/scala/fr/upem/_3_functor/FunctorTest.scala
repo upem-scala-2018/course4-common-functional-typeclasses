@@ -1,6 +1,6 @@
 package fr.upem._3_functor
 
-import cats.{Applicative, Functor}
+import cats.{Applicative, Functor, Monad}
 import fr.upem._3_functor.ContentType.{Json, Xml}
 import fr.upem._3_functor.Tree.{Leaf, Node}
 import org.scalatest.{FlatSpec, Matchers}
@@ -64,7 +64,7 @@ class FunctorTest extends FlatSpec with Matchers {
     val values    = Node[Int](5, Leaf, Leaf)
     val functions = Node[Int => String](Integer.toString, Leaf, Leaf)
 
-    Applicative[Tree].ap(functions)(values) should equal(Node[Int](6, Leaf, Leaf))
+    Applicative[Tree].ap(functions)(values) should equal(Node("5", Leaf, Leaf))
   }
 
   it should "work with empty value trees" in {
@@ -86,10 +86,6 @@ class FunctorTest extends FlatSpec with Matchers {
     val functions = Node[Int => Int](_ * 2, Leaf, Node(_ + 10, Leaf, Node(_ + 2, Leaf, Leaf)))
 
     Applicative[Tree].ap(functions)(values) should equal(Node[Int](10, Leaf, Node(11, Leaf, Leaf)))
-  }
-
-  "Monad" should "be available for Tree" in {
-
   }
 
 }
