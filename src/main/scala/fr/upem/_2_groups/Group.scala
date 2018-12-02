@@ -18,7 +18,7 @@ case class Cache(values: Map[String, String])
 object Cache {
 
   // 2.2 Implement Monoid instance for Cache
-  implicit val monoid: Monoid[Cache] = ???
+  lazy implicit val monoid: Monoid[Cache] = ???
 
 }
 
@@ -39,6 +39,6 @@ object Player {
 
   // 2.3 Implement a semilattice instance for player
   // A semilattice is commutative and idempotent
-  implicit val semilattice: Semilattice[Player] = ???
+  lazy implicit val semilattice: Semilattice[Player] = ???
 
 }
