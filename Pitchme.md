@@ -80,6 +80,7 @@ Les mêmes que les semigroupes.
 ### Contre-exemples
 
 - NonEmptyList[A]
+- NonEmptyX...
 - Non-empty strings
 
 ---
@@ -122,10 +123,11 @@ trait Functor[F[_]] {
 
 ### Exemples de foncteurs
 
-- List
-- Option
-- Id
+- List[_]
+- Option[_]
 - Either[A, _]
+- Id[_]
+- Const[K, _]
 
 ---
 
@@ -143,7 +145,10 @@ trait Applicative[F[_]] {
 
 ### Exemples d'applicatives
 
-- 
+- List[_]
+- Option[_]
+- Either[A, _]
+- Id[_]
 
 ---
 
@@ -157,6 +162,8 @@ def pair[F[_], A](f1: F[A], f2: F[A])(implicit A: Applicative[F]) =
 ---
 
 ### Contre-exemples (Foncteur sans Applicative)
+
+- Const[A, _] when A is only a semigroup
 
 
 ---
@@ -172,8 +179,8 @@ def pair[F[_], A](f1: F[A], f2: F[A])(implicit A: Applicative[F]) =
 
 ## Troisième hiérarchie
 
-- Foldable
-- Traverse
+- Foldable[_]
+- Traverse[_]
 
 ---
 
@@ -181,6 +188,8 @@ def pair[F[_], A](f1: F[A], f2: F[A])(implicit A: Applicative[F]) =
 
 - Eq
 - Show
+- State
+- Write
 
 ---
 
@@ -190,7 +199,7 @@ def pair[F[_], A](f1: F[A], f2: F[A])(implicit A: Applicative[F]) =
 
 ---
 
-Bibliographie
+# Bibliographie
 
 - How to make ad􏰀hoc p olymorphism less ad hoc
 - Monads for functional programming

@@ -24,6 +24,7 @@ object Cache {
 
 
 sealed trait Format
+
 object Format {
   case object Mkv extends Format
   case object Webm extends Format
@@ -38,7 +39,7 @@ case class Player(supportedFormats: Set[Format])
 object Player {
 
   // 2.3 Implement a semilattice instance for player
-  // A semilattice is commutative and idempotent
+  // A semilattice "combine" method is commutative and idempotent
   lazy implicit val semilattice: Semilattice[Player] = ???
 
 }
