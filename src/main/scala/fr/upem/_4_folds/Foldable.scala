@@ -17,11 +17,11 @@ object TreeFolds {
         case Node(a, l, r) =>
           val lhs = traverse(l)(f)
           val rhs = traverse(r)(f)
+          val lhsRsh = ev.product(lhs, rhs)
+          val bLshRsh = ev.product(f(a), lhsRsh)
 
-          val lhsRsh = ev.ap[Tree[B], (Tree[B], Tree[B])](ev.map(lhs)(a => (b: Tree[B]) => (a, b)))(rhs)
-          val lhsRshA = ev.ap[B, ((Tree[B], Tree[B]), B)](ev.map(lhsRsh)(a => (b: B) => (a, b)))(f(a))
-          ev.map(lhsRshA) {
-            case ((lhsb, rhsb), b) => Node(b, lhsb, rhsb)
+          ev.map(bLshRsh) {
+            case (b, (lhs, rhs)) => Node(b, lhs, rhs)
           }
       }
 
