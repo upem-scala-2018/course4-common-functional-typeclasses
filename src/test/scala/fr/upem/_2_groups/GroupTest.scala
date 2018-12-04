@@ -12,7 +12,7 @@ import scala.collection.immutable.SortedMap
 
 class GroupTest extends FlatSpec with PropertyChecks with Matchers {
 
-  "Semigroup" should "combind NonEmptyCaches" in {
+  "Semigroup" should "combine NonEmptyCaches" in {
     val cache1 = NonEmptyCache(NonEmptyMap("key1" -> "value1", SortedMap.empty))
     val cache2 = NonEmptyCache(NonEmptyMap("key2" -> "value2", SortedMap.empty))
 
@@ -20,7 +20,7 @@ class GroupTest extends FlatSpec with PropertyChecks with Matchers {
     Semigroup[NonEmptyCache].combine(cache1, cache2) should equal(expected)
   }
 
-  "Monoid" should "combine Cache" in {
+  "Monoid" should "combine Caches" in {
     val cache1 = Cache(Map("key1" -> "value1", "key2" -> "cache1"))
     val cache2 = Cache(Map("key2" -> "cache2"))
 

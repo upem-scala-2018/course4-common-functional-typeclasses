@@ -12,7 +12,7 @@ object ContentType {
 case class HttpHeader[A](name: String, value: A)
 
 object HttpHeader {
-  // 3.4 Create a functor for HttpHeader on the value side
+  // 3.4 Create a functor for HttpHeader
   lazy implicit val functor: Functor[HttpHeader] = ???
 
   // 3.5 Can you implement an Applicative and a Monad for the HttpHeader

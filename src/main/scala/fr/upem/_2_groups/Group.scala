@@ -7,7 +7,7 @@ case class NonEmptyCache(values: NonEmptyMap[String, String])
 
 object NonEmptyCache {
 
-  // 2.1 Implement Semigroup instance for NonEmptyCache (it is possible to reuse existing NonEmptyMap instance)
+  // 2.1 Implement Semigroup instance for NonEmptyCache (it is possible to reuse the existing NonEmptyMap instance)
   implicit val semigroup: Semigroup[NonEmptyCache] = ???
 
 }
