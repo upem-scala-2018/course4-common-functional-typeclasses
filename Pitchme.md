@@ -1,14 +1,14 @@
-# Cours 4: Typeclasses répandues
-
+# Cours 4: Typeclasses fonctionelles répandues
 
 ---
 
 ## Origines
 
-- 1988
+- Premier papier en 1988
+- Apparues en Haskell
 - Philipp Wadler and Stephen Blott
-- apparues en Haskell
-
+- Puissant outil de polymorphisme ad-hoc
+- Permet la programmation par effet
 
 ---
 
@@ -147,6 +147,13 @@ trait Functor[F[_]] {
 
 ---
 
+### Foncteur - Illustration
+
+![Illustration foncteur](assets/functor.png)
+
+
+---
+
 ### Exemples de foncteurs
 
 - List[_]
@@ -196,6 +203,12 @@ trait Applicative[F[_]] {
 
 ---
 
+### Applicative - Illustration
+
+![Illustration applicative](assets/applicative.png)
+
+---
+
 ### Exemples d'applicatives
 
 - List[_]
@@ -241,20 +254,41 @@ trait Monad[F[_]] {
 
 ---
 
+### Monad - Illustration
+
+![Illustration monad](assets/monad.png)
+
+---
+
 ### Propriétés
+
+- Identité gauche
+pure(a).flatMap(f) = f(a)
+
+- Identité droite
+ma.flatMap(pure) = ma
+
+- Associativité
+ma.flatMap(f).flatMap(g) = ma.flatMap(a => f(a).flatMap(g))
 
 ---
 
 ### Utilisation de monades
 
+```scala
+for {
+  f <- fib(n) //Option[Int]
+  p <- isPair(n)
+} yield p
+```
+
 ---
 
-### Contre-exemples (Foncteur sans Applicative)
+### Contre-exemples (Applicative sans Monade)
 
+- Validated[E, _]
 
 ---
-
-
 
 ### Aller plus loin
 
@@ -262,6 +296,36 @@ trait Monad[F[_]] {
 - Bifunctor[F[_, _]]
 - MonadError[F[_]]
 - CommutativeApplicative[F[_]]
+
+---
+
+## Effectful programming
+
+- La programmation fonctionelle interdit les effets de bords
+- Un programme sans effets de bords est inutile
+- La programmation fonctionelle est elle inutile ?
+
+---
+
+### Description d'un programme
+
+- De la donnée en tant que programme
+- Les effets sont décrits au travers de Monades
+- Les Monades sont de la donnée
+- Un runtime interprete la description (donnée) du programme
+
+---
+
+### Exemple - program as data
+
+```scala
+sealed trait Program[A]
+case class ReadLn[A](next: String => Program[A])      extends Program[A]
+case class PrintLn[A](line: String, next: Program[A]) extends Program[A]
+case class Exit[A](a: A)                              extends Program[A]
+```
+
+Interprétation du programme par un runtime, *démo*
 
 ---
 
@@ -276,6 +340,7 @@ trait Monad[F[_]] {
 
 - Eq
 - Show
+- Hash
 - State
 - Write
 
@@ -283,8 +348,8 @@ trait Monad[F[_]] {
 
 ## Typeclasses en Scala
 
--- cats
--- scalaz
+-- ![cats](https://typelevel.org/cats/)
+-- ![scalaz](https://github.com/scalaz/scalaz)
 
 ---
 
@@ -296,9 +361,36 @@ trait Monad[F[_]] {
 
 ### Instances de typeclasses
 
+```scala
+import cats.instances.list._
+import cats.instances.either._
+import cats.instances.option._
+import cats.instances.string._
+// ...
+```
+
 ---
 
 ### Syntaxes de typeclasses
+
+```scala
+import cats.syntax.functor._
+import cats.syntax.monad._
+import cats.syntax.applicative._
+import cats.syntax.traverse._
+// ...
+```
+
+---
+
+### D'autres outils
+
+```scala
+import cats.syntax.either._
+import cats.data.Validated
+import cats.data.Eval
+// ...
+```
 
 ---
 
