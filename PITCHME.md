@@ -70,7 +70,7 @@ def doubleSize[A](a: A) = 2 * size(a) // ne compile pas
 
 ---
 
-### Polymorphisme ad hoc (typeclass)
+### Polymorphisme ad hoc (typeclasses)
 
 ```scala
 sealed trait Size[A] { def size(a: A): Int }
@@ -87,6 +87,7 @@ def doubleSize[A: Size](a: A) = Size[A].size(a) * 2
 - Nombreuses
 - Souvent avec un haut niveau d'abstraction
 - Non matérialisées en Scala
+- Des hiérarchies avec des fonctionalités et **propriétés** grandissantes
 
 ---
 
@@ -111,7 +112,7 @@ trait Semigroup[A] {
 }
 ```
 
-Exemples de semigroup ?
+Exemples de semigroupes ?
 
 ---
 
@@ -155,6 +156,8 @@ trait Monoid[A] {
 }
 ```
 
+Exemples de monoides ?
+
 ---
 
 ### Exemples de Monoïdes
@@ -169,7 +172,7 @@ trait Monoid[A] {
 
 ---
 
-### Contre-exemples
+### Contre-exemples (semigroup sans monoide)
 
 - NonEmptyList[A]
 - NonEmptyX...
@@ -188,8 +191,8 @@ def fold[A](l: List[A])(implicit M: Monoid[A]) =
 
 ### Aller plus loin
 
-- Band[A]
 - CommutativeSemigroup[A]
+- Band[A]
 - Semilattice[A]
 - ...
 
@@ -221,12 +224,13 @@ trait Functor[F[_]] {
 }
 ```
 
+Exemples de foncteurs ?
+
 ---
 
 ### Foncteur - Illustration
 
 ![Illustration foncteur](assets/functor.png)
-
 
 ---
 
@@ -253,7 +257,8 @@ fa.map(identity) = fa
 ### Utilisation de foncteurs
 
 ```scala
-Functor[Option].tuple(Some(3), 4) // Some((3, 4))
+Functor[Option].map(Some(3))(x => x + 10) // Some((13))
+Functor[Option].tupleLeft(Some(3), 4) // Some((3, 4))
 ```
 
 ---
@@ -263,7 +268,10 @@ Functor[Option].tuple(Some(3), 4) // Some((3, 4))
 Les foncteurs se composent
 
 ```scala
-Functor[Future].compose(Functor[List]).compose(Functor[Option])
+val F = Functor[Future].compose(Functor[List]).compose(Functor[Option])
+
+F.map(Future(List(Option(2))))(x => x + 1) // Future(List(Option(3)))
+
 ```
 
 ---
@@ -276,6 +284,8 @@ trait Applicative[F[_]] {
   def ap[A, B](ff: F[A => B])(fa: F[A]): F[B]
 }
 ```
+
+Exemples d'applicatives ?
 
 ---
 
@@ -327,6 +337,8 @@ trait Monad[F[_]] {
   def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B]
 }
 ```
+
+Exemple de monades ?
 
 ---
 
@@ -388,7 +400,7 @@ for {
 - De la donnée en tant que programme
 - Les effets sont décrits au travers de Monades
 - Les Monades sont de la donnée
-- Un runtime interprete la description (donnée) du programme
+- Un runtime interprète la description (donnée) du programme
 
 ---
 
@@ -411,6 +423,11 @@ Interprétation du programme par un runtime, *démo*
 - Traverse[_]
 
 ---
+
+TODO
+
+---
+
 
 ## Autres typeclasses
 
