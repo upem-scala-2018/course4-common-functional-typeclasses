@@ -6,8 +6,10 @@ import fr.upem._3_functor.Tree.{Leaf, Node}
 import org.scalatest.{FlatSpec, Matchers}
 import TreeFolds._
 import cats.implicits._
+import cats.laws.discipline.{FoldableTests, TraverseTests}
+import fr.upem.CheckLaws
 
-class FoldsTest extends FlatSpec with Matchers {
+class FoldsTest extends FlatSpec with Matchers with CheckLaws {
 
   "Foldable" should "fold tree right side first" in {
     val tree = Node("b", Node("d", Leaf, Node("c", Leaf, Leaf)), Node("a", Leaf, Leaf))
@@ -20,6 +22,8 @@ class FoldsTest extends FlatSpec with Matchers {
 
     Foldable[Tree].foldLeft(tree, "")(_ + _) should equal("abcd")
   }
+
+  checkAll("Foldable[Tree]", FoldableTests[Tree].foldable[Int, Int])
 
   val isTwo: Int => Option[Int] = x =>  if (x == 2) Some(2) else None
 
@@ -35,5 +39,7 @@ class FoldsTest extends FlatSpec with Matchers {
     val isTwo: Int => Option[Int] = x =>  if (x == 2) Some(2) else None
     Traverse[Tree].traverse(tree)(isTwo) should equal(None)
   }
+
+  checkAll("Traverse[Tree]", TraverseTests[Tree].traverse[Int, String, Int, Int, Option, Option])
 
 }

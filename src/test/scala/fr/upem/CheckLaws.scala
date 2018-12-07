@@ -6,11 +6,10 @@ import cats.Eq
 import cats.data.NonEmptyMap
 import fr.upem._2_groups.{Cache, NonEmptyCache, Player}
 import fr.upem._3_functor.{HttpHeader, Tree}
-import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.Arbitrary
 import org.scalatest.FlatSpecLike
 import org.scalatest.prop.Checkers
 import org.typelevel.discipline.Laws
-import org.scalacheck.ScalacheckShapeless._
 import cats.implicits._
 import fr.upem._3_functor.Tree.{Leaf, Node}
 
