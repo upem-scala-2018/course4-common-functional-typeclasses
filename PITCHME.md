@@ -1,4 +1,9 @@
-# Cours 4: Typeclasses fonctionelles répandues
+# Scala
+
+
+<img src="https://cdn.worldvectorlogo.com/logos/scala-4.svg" alt="Scala Logo" width="100px" style="border:none;background:none;" class="center"/>
+
+Typeclasses fonctionelles
 
 ---
 
@@ -7,7 +12,7 @@
 - Premier papier en 1988
 - Apparues en Haskell
 - Philipp Wadler and Stephen Blott
-- Puissant outil de polymorphisme ad-hoc
+- Puissant outil de polymorphisme ad hoc
 - Permet la programmation par effet
 
 ---
@@ -16,7 +21,78 @@
 
 - polymorphisme paramétré: Définition **unique** pour un type paramétré
 - polymorphisme ad hoc: Définitions **multiples**, une par type éligible
-- polymorphisme par sous-typage: Définitions **multiples**, une par type sous-type
+- polymorphisme par sous-typage: Définitions **multiples**, un par type sous-type
+
+---
+
+### Polymorphisme paramétré
+
+```scala
+def head[A](l: List[A]): Option[A] =
+  l match {
+    case Nil => None
+    case h :: _ => Some(h)
+  }
+```
+
+---
+
+### Polymorphisme paramétré
+
+```scala
+def size(l: List[_]): Int =
+  l match {
+    case Nil => 0
+    case _ :: t => 1 + size(t)
+  }
+```
+
+---
+
+### Polymorphisme ad hoc (surcharge)
+
+```scala
+def size(s: String) = s.length
+def size(l: List[_]) = l.length
+def size(s: Set[_]) = s.size
+```
+
+---
+
+### Polymorphisme ad hoc (surcharge)
+
+```scala
+def doubleSize[A](a: A) = 2 * size(a) // ne compile pas
+```
+
+- Solution simple mais limite la réutilisation de code
+- Il n'existe pas d'abstraction commune entre les types éligibles
+
+---
+
+### Polymorphisme ad hoc (typeclass)
+
+```scala
+sealed trait Size[A] { def size(a: A): Int }
+
+val ev = new Size[String] { def size(s: String) = s.length }
+
+def doubleSize[A: Size](a: A) = Size[A].size(a) * 2
+```
+
+---
+
+## Les typeclasses fonctionelles 
+
+- Nombreuses
+- Souvent avec un haut niveau d'abstraction
+- Non matérialisées en Scala
+
+---
+
+## Typeclasses dans cats
+
+![Illustration](assets/cats.svg)
 
 ---
 
@@ -353,12 +429,6 @@ Interprétation du programme par un runtime, *démo*
 
 ---
 
-## Typeclasses dans cats
-
-![Illustration](assets/cats.svg)
-
----
-
 ### Instances de typeclasses
 
 ```scala
@@ -396,5 +466,5 @@ import cats.data.Eval
 
 # Bibliographie
 
-- How to make ad􏰀hoc p olymorphism less ad hoc
+- How to make ad􏰀hoc polymorphism less ad hoc
 - Monads for functional programming
