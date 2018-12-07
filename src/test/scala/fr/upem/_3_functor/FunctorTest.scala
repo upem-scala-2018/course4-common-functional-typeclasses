@@ -1,11 +1,13 @@
 package fr.upem._3_functor
 
+import cats.laws.discipline.{ApplicativeTests, FunctorTests}
 import cats.{Applicative, Functor}
+import fr.upem.CheckLaws
 import fr.upem._3_functor.ContentType.{Json, Xml}
 import fr.upem._3_functor.Tree.{Leaf, Node}
 import org.scalatest.{FlatSpec, Matchers}
 
-class FunctorTest extends FlatSpec with Matchers {
+class FunctorTest extends FlatSpec with Matchers with CheckLaws {
 
   "Functor" should "be available for List" in {
     // 3.1 Import the right typeclass
@@ -47,6 +49,11 @@ class FunctorTest extends FlatSpec with Matchers {
     mappedHeader should equal(HttpHeader("content-type", Xml))
   }
 
+  {
+    import cats.instances.int._
+    checkAll("Functor[HttpHeader]", FunctorTests[HttpHeader].functor[Int, String, Int])
+  }
+
   "FunctorSyntax" should "be available for HttpHeader" in {
     // 3.5 Import the functor syntax and un-comment following line
     // HttpHeader("content-type", Json).map(_ => Xml) should equal(HttpHeader("content-type", Xml))
@@ -86,6 +93,13 @@ class FunctorTest extends FlatSpec with Matchers {
     val functions = Node[Int => Int](_ * 2, Leaf, Node(_ + 10, Leaf, Node(_ + 2, Leaf, Leaf)))
 
     Applicative[Tree].ap(functions)(values) should equal(Node[Int](10, Leaf, Node(11, Leaf, Leaf)))
+  }
+
+  {
+    import cats.instances.int._
+    import cats.instances.string._
+    import cats.instances.tuple._
+    checkAll("Applicative[Tree]", ApplicativeTests[Tree].applicative[Int, Int, String])
   }
 
 }
