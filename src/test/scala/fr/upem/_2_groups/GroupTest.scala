@@ -1,7 +1,7 @@
 package fr.upem._2_groups
 
 import cats.data.NonEmptyMap
-import cats.implicits._
+import cats.kernel.laws.discipline.{MonoidTests, SemigroupTests, SemilatticeTests}
 import cats.kernel.{Band, CommutativeSemigroup, Monoid, Semigroup}
 import fr.upem._2_groups.Format.{Amv, Mkv, Wmv}
 import org.scalacheck.{Arbitrary, Gen}
@@ -9,8 +9,10 @@ import org.scalatest.prop.PropertyChecks
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.collection.immutable.SortedMap
+import cats.implicits._
+import fr.upem.CheckLaws
 
-class GroupTest extends FlatSpec with PropertyChecks with Matchers {
+class GroupTest extends FlatSpec with PropertyChecks with Matchers with CheckLaws {
 
   "Semigroup" should "combine NonEmptyCaches" in {
     val cache1 = NonEmptyCache(NonEmptyMap("key1" -> "value1", SortedMap.empty))
@@ -19,6 +21,8 @@ class GroupTest extends FlatSpec with PropertyChecks with Matchers {
     val expected = NonEmptyCache(NonEmptyMap("key1" -> "value1", SortedMap("key2" -> "value2")))
     Semigroup[NonEmptyCache].combine(cache1, cache2) should equal(expected)
   }
+
+  checkAll("SemigroupLaws[NonEmptyCache]", SemigroupTests[NonEmptyCache].semigroup)
 
   "Monoid" should "combine Caches" in {
     val cache1 = Cache(Map("key1" -> "value1", "key2" -> "cache1"))
@@ -31,6 +35,8 @@ class GroupTest extends FlatSpec with PropertyChecks with Matchers {
   it should "create empty cache" in {
     Monoid[Cache].empty should equal(Cache(Map.empty))
   }
+
+  checkAll("Monoid[Cache]", MonoidTests[Cache].monoid)
 
   implicit val playerArbitrary: Arbitrary[Player] = Arbitrary(Gen.someOf(Format.all).map(f => Player(f.toSet)))
 
@@ -60,5 +66,7 @@ class GroupTest extends FlatSpec with PropertyChecks with Matchers {
       player1Then2 should equal(player2Then1)
     }
   }
+
+  checkAll("Semilattice[Player]", SemilatticeTests[Player].semilattice)
 
 }
