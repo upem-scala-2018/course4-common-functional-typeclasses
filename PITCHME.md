@@ -139,10 +139,10 @@ def reduce[A](l: List[A])(implicit S: Semigroup[A]) =
 ### Semigroupes - Propriétés 
 
 - Composition interne
-∀ x ∈ *E*, y ∈ *E*, x + y ∈ *E*
+    - ∀ x ∈ *E*, y ∈ *E*, x + y ∈ *E*
 
 - Associativité
-(x + y) + z = x + (y + z)
+    - (x + y) + z = x + (y + z)
 
 ---
 
@@ -166,12 +166,13 @@ Exemples de monoides ?
 - Option[A] (A: Monoid)
 - List[A]
 - Map[K, V] (V: Monoid)
-
 - Function1[A, B] (B: Monoid)
+
+Contre-exemples ?
 
 ---
 
-### Contre-exemples (semigroup sans monoide)
+### Contre-exemples (semigroupe sans monoïde)
 
 - NonEmptyList[A]
 - NonEmptyX...
@@ -184,6 +185,12 @@ Exemples de monoides ?
 ```scala
 def fold[A](l: List[A])(implicit M: Monoid[A]) =
     l.fold(M.empty)(M.combine)
+
+def combineN[A](a: A, n: Int)(implicit M: Monoid[A]): A =
+    if (n <= 0)
+      M.empty
+    else 
+      M.combine(a, combineN(a, n - 1))
 ```
 
 ---
@@ -200,10 +207,10 @@ def fold[A](l: List[A])(implicit M: Monoid[A]) =
 ### Monoïdes - Propriétés
 
 - Associativité
-(x + y) + z = x + (y + z)
+    - (x + y) + z = x + (y + z)
 
 - Identité (droite et gauche)
-x + *e* = *e* + x = x
+    - x + *e* = *e* + x = x
 
 ---
 
@@ -227,12 +234,6 @@ Exemples de foncteurs ?
 
 ---
 
-### Foncteur - Illustration
-
-![Illustration foncteur](assets/functor.png)
-
----
-
 ### Exemples de foncteurs
 
 - List[_]
@@ -244,13 +245,19 @@ Exemples de foncteurs ?
 
 ---
 
+### Foncteur - Illustration
+
+![Illustration foncteur](assets/functor.png)
+
+---
+
 ### Foncteurs - Propriétés
 
 - Composition
-fa.map(g.f) = fa.map(g).map(f)
+    - fa.map(g.f) = fa.map(g).map(f)
 
 - Identité
-fa.map(identity) = fa
+    - fa.map(identity) = fa
 
 ---
 
