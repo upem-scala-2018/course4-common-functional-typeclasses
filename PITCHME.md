@@ -122,8 +122,8 @@ Exemples de semigroupes ?
 - Option[A] (A: Semigroup)
 - List[A] (A: Semigroup)
 - Map[K, V] (V: Semigroup)
-
 - Function1[A, B] (B: Semigroup)
+- ...
 
 ---
 
@@ -167,8 +167,9 @@ Exemples de monoides ?
 - List[A]
 - Map[K, V] (V: Monoid)
 - Function1[A, B] (B: Monoid)
+- ...
 
-Contre-exemples ?
+Contre-exemples de monoïdes ?
 
 ---
 
@@ -242,6 +243,7 @@ Exemples de foncteurs ?
 - Id[_]
 - Const[K, _]
 - Future[_]
+- ...
 
 ---
 
@@ -254,7 +256,7 @@ Exemples de foncteurs ?
 ### Foncteurs - Propriétés
 
 - Composition
-    - fa.map(g.f) = fa.map(g).map(f)
+    - fa.map(g.compose(f)) = fa.map(f).map(g)
 
 - Identité
     - fa.map(identity) = fa
@@ -264,7 +266,7 @@ Exemples de foncteurs ?
 ### Utilisation de foncteurs
 
 ```scala
-Functor[Option].map(Some(3))(x => x + 10) // Some((13))
+Functor[Option].map(Some(3))(x => x + 10) // Some(13)
 Functor[Option].tupleLeft(Some(3), 4) // Some((3, 4))
 ```
 
@@ -275,10 +277,13 @@ Functor[Option].tupleLeft(Some(3), 4) // Some((3, 4))
 Les foncteurs se composent
 
 ```scala
-val F = Functor[Future].compose(Functor[List]).compose(Functor[Option])
+val F = 
+  Functor[Future]
+    .compose(Functor[List])
+    .compose(Functor[Option])
 
-F.map(Future(List(Option(2))))(x => x + 1) // Future(List(Option(3)))
-
+F.map(Future(List(Option(2))))(x => x + 1)
+// Future(List(Option(3)))
 ```
 
 ---
@@ -296,12 +301,6 @@ Exemples d'applicatives ?
 
 ---
 
-### Applicative - Illustration
-
-![Illustration applicative](assets/applicative.png)
-
----
-
 ### Exemples d'applicatives
 
 - List[_]
@@ -309,31 +308,41 @@ Exemples d'applicatives ?
 - Either[A, _]
 - Id[_]
 - Future[_]
+- ...
+
+---
+
+### Applicative - Illustration
+
+![Illustration applicative](assets/applicative.png)
 
 ---
 
 ### Applicatives - Propriétés
 
 - Identité
-pure(identity).ap(x) = x
+    - pure(identity).ap(x) = x
 
 - Homomorphisme
-pure(f).ap(pure(x)) = pure(f(x))
+    - pure(f).ap(pure(x)) = pure(f(x))
 
 ---
 
 ### Utilisation d'applicative
 
 ```scala
-def pair[F[_], A, B](f1: F[A], f2: F[B])(implicit F: Applicative[F]): F[(A, B)] =
+def pair[F[_], A, B](f1: F[A], f2: F[B])
+                    (implicit F: Applicative[F]): F[(A, B)] =
     F.ap[B, (A, B)](F.map(f1)(a => b => (a, b)))(f2)
 ```
+
+Contre-exemples d'applicatives ?
 
 ---
 
 ### Contre-exemples (Foncteur sans Applicative)
 
-- Const[A, _] when A is only a semigroup
+- Const[A, _] si A possède seulement un semigroup
 
 ---
 
@@ -350,6 +359,15 @@ Exemple de monades ?
 
 ---
 
+- List[_]
+- Option[_]
+- Either[A, _]
+- Id[_]
+- Future[_]
+- ...
+
+---
+
 ### Monad - Illustration
 
 ![Illustration monad](assets/monad.png)
@@ -359,13 +377,13 @@ Exemple de monades ?
 ### Propriétés
 
 - Identité gauche
-pure(a).flatMap(f) = f(a)
+    - pure(a).flatMap(f) = f(a)
 
 - Identité droite
-ma.flatMap(pure) = ma
+    - ma.flatMap(pure) = ma
 
 - Associativité
-ma.flatMap(f).flatMap(g) = ma.flatMap(a => f(a).flatMap(g))
+    - ma.flatMap(f).flatMap(g) = ma.flatMap(a => f(a).flatMap(g))
 
 ---
 
@@ -391,6 +409,8 @@ def fib(n: Int): Option[Int] = ???
 parseInt(n).flatMap(fib) // Option[Int]
 ```
 
+Contre-exemples de monades ?
+
 ---
 
 ### Contre-exemples (Applicative sans Monade)
@@ -402,7 +422,7 @@ parseInt(n).flatMap(fib) // Option[Int]
 ### Aller plus loin
 
 - Contravariant(Functor)[F[_]]
-- Bifunctor[F[_, _]]
+- Bifunctor[F[\_, \_]]
 - MonadError[F[_]]
 - CommutativeApplicative[F[_]]
 
@@ -450,7 +470,8 @@ Interprétation du programme par un runtime, *démo*
 ```scala
 trait Foldable[F[_]] {
     def foldLeft[A, B](fa: F[A], b: B)(f: (B, A) => B): B
-    def foldRight[A, B](fa: F[A], lb: Eval[B])(f: (A, Eval[B]) => Eval[B]): Eval[B]
+    def foldRight[A, B](fa: F[A], lb: Eval[B])
+                       (f: (A, Eval[B]) => Eval[B]): Eval[B]
 }
 ```
 
@@ -464,6 +485,7 @@ Exemples de Foldable ?
 - List[_]
 - Option[_]
 - Tuple2[A, _]
+- ...
 
 ---
 
@@ -471,7 +493,8 @@ Exemples de Foldable ?
 
 ```scala
 def combineAll[A: Monoid](fa: F[A])
-def collectFirst[A, B](fa: F[A])(pf: PartialFunction[A, B]): Option[B]
+def collectFirst[A, B](fa: F[A])
+                      (pf: PartialFunction[A, B]): Option[B]
 ```
 
 ---
@@ -480,7 +503,8 @@ def collectFirst[A, B](fa: F[A])(pf: PartialFunction[A, B]): Option[B]
 
 ```scala
 trait Traverse[F[_]] {
-  def traverse[G[_]: Applicative, A, B](fa: F[A])(f: A => G[B]): G[F[B]]
+  def traverse[G[_]: Applicative, A, B](fa: F[A])
+                                       (f: A => G[B]): G[F[B]]
 }
 ```
 
@@ -516,14 +540,15 @@ userIds.flatTraverse(fetchContacts) // Future[List[User]]
 - Show
 - Hash
 - State
-- Write
+- Writer
 
 ---
 
 ## Typeclasses en Scala
 
--- ![cats](https://typelevel.org/cats/)
--- ![scalaz](https://github.com/scalaz/scalaz)
+- [Cats](https://typelevel.org/cats/)
+
+- [Scalaz](https://github.com/scalaz/scalaz)
 
 ---
 
@@ -564,5 +589,5 @@ import cats.data.Eval
 
 # Bibliographie
 
-- How to make ad􏰀hoc polymorphism less ad hoc
+- How to make ad􏰀 hoc polymorphism less ad hoc
 - Monads for functional programming
