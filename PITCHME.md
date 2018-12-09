@@ -1,6 +1,5 @@
 # Scala
 
-
 <img src="https://cdn.worldvectorlogo.com/logos/scala-4.svg" alt="Scala Logo" width="100px" style="border:none;background:none;" class="center"/>
 
 Typeclasses fonctionelles
@@ -10,8 +9,8 @@ Typeclasses fonctionelles
 ## Origines
 
 - Premier papier en 1988
-- Apparues en Haskell
 - Philipp Wadler and Stephen Blott
+- Apparues en Haskell
 - Puissant outil de polymorphisme ad hoc
 - Permet la programmation par effet
 
@@ -75,7 +74,7 @@ def doubleSize[A](a: A) = 2 * size(a) // ne compile pas
 ```scala
 sealed trait Size[A] { def size(a: A): Int }
 
-val ev = new Size[String] { def size(s: String) = s.length }
+implicit val ev = new Size[String] { def size(s: String) = s.length }
 
 def doubleSize[A: Size](a: A) = Size[A].size(a) * 2
 ```
@@ -93,7 +92,7 @@ def doubleSize[A: Size](a: A) = Size[A].size(a) * 2
 
 ## Typeclasses dans cats
 
-![Illustration](assets/cats.svg)
+![Illustration](assets/cats.png)
 
 ---
 
