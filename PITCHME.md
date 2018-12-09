@@ -241,6 +241,7 @@ Exemples de foncteurs ?
 - Either[A, _]
 - Id[_]
 - Const[K, _]
+- Future[_]
 
 ---
 
@@ -301,6 +302,7 @@ Exemples d'applicatives ?
 - Option[_]
 - Either[A, _]
 - Id[_]
+- Future[_]
 
 ---
 
@@ -361,13 +363,26 @@ ma.flatMap(f).flatMap(g) = ma.flatMap(a => f(a).flatMap(g))
 
 ---
 
+### Problème à résoudre
+
+```scala
+def parseInt(n: String): Option[Int] = ???
+def fib(n: Int): Option[Int] = ???
+
+
+parseInt(n).map(fib) // Option[Option[Int]]
+```
+
+---
+
 ### Utilisation de monades
 
 ```scala
-for {
-  f <- fib(n) //Option[Int]
-  p <- isPair(n)
-} yield p
+def parseInt(n: String): Option[Int] = ???
+def fib(n: Int): Option[Int] = ???
+
+
+parseInt(n).flatMap(fib) // Option[Int]
 ```
 
 ---
@@ -424,10 +439,70 @@ Interprétation du programme par un runtime, *démo*
 
 ---
 
-TODO
+### Foldable
+
+```scala
+trait Foldable[F[_]] {
+    def foldLeft[A, B](fa: F[A], b: B)(f: (B, A) => B): B
+    def foldRight[A, B](fa: F[A], lb: Eval[B])(f: (A, Eval[B]) => Eval[B]): Eval[B]
+}
+```
+
+Exemples de Foldable ?
 
 ---
 
+### Exemples de Foldable
+
+- Either[A, _]
+- List[_]
+- Option[_]
+- Tuple2[A, _]
+
+---
+
+### Utilisation de Foldable
+
+```scala
+def combineAll[A: Monoid](fa: F[A])
+def collectFirst[A, B](fa: F[A])(pf: PartialFunction[A, B]): Option[B]
+```
+
+---
+
+## Traverse
+
+```scala
+trait Traverse[F[_]] {
+  def traverse[G[_]: Applicative, A, B](fa: F[A])(f: A => G[B]): G[F[B]]
+}
+```
+
+---
+
+### Problème à résoudre
+
+```scala
+def fetchUser(id: UserId): Future[User] = ???
+def fetchContacts(id: UserId): Future[List[User]] = ???
+
+user.contacts.map(fetchUser) // List[Future[User]]
+userIds.map(fetchContacts) // List[Future[List[User]]]
+```
+
+---
+
+### Utilisation de traverse
+
+```scala
+def fetchUser(id: UserId): Future[User] = ???
+def fetchContacts(id: UserId): Future[List[User]] = ???
+
+user.contacts.traverse(fetchUser) // Future[List[User]]
+userIds.flatTraverse(fetchContacts) // Future[List[User]]
+```
+
+---
 
 ## Autres typeclasses
 
