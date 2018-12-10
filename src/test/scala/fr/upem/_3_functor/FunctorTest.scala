@@ -34,7 +34,7 @@ class FunctorTest extends FlatSpec with Matchers with CheckLaws {
 
     val lastElem: List[Int] => Option[Int]   = list => list.reverse.headOption
     val isPair: Int => Boolean               = _ % 2 == 0
-    val isPairLifted: Option[Int] => Boolean = ???
+    val isPairLifted: Option[Int] => Boolean = _.exists(isPair)
 
     val mappedFun = Functor[List[Int] => ?].map(lastElem)(isPairLifted)
     mappedFun(List(5, 5, 4)) should be(true)
