@@ -29,8 +29,4 @@ object Tree {
   // 3.6 Implement a Functor instance for Tree
   lazy implicit val functor: Functor[Tree] = ???
 
-  // 3.7 Hard - Implement an Applicative instance for Tree
-  // The above Functor instance can be deleted since applicative extends Functor
-  lazy implicit val applicative: Applicative[Tree] = ???
-
 }

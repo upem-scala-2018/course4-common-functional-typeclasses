@@ -27,19 +27,4 @@ class FoldsTest extends FlatSpec with Matchers with CheckLaws {
 
   val isTwo: Int => Option[Int] = x =>  if (x == 2) Some(2) else None
 
-  "Traverse" should "traverse tree resulting in Some" in {
-    val tree = Node(2, Node(2, Leaf, Node(2, Leaf, Leaf)), Leaf)
-
-    Traverse[Tree].traverse(tree)(isTwo) should equal(Some(tree))
-  }
-
-  it should "traverse tree resulting in None" in {
-    val tree = Node(2, Node(5, Leaf, Node(2, Leaf, Leaf)), Leaf)
-
-    val isTwo: Int => Option[Int] = x =>  if (x == 2) Some(2) else None
-    Traverse[Tree].traverse(tree)(isTwo) should equal(None)
-  }
-
-  checkAll("Traverse[Tree]", TraverseTests[Tree].traverse[Int, String, Int, Int, Option, Option])
-
 }
