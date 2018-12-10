@@ -9,7 +9,7 @@ class EqTest extends FlatSpec with PropertyChecks {
 
   "Equality" should "compare ints" in {
     // 1.1 Import the right typeclass instances
-    implicit val ev: Eq[Int] = ???
+    import cats.instances.int._
 
     forAll { i: Int =>
       Eq[Int].eqv(i, i)
@@ -18,7 +18,7 @@ class EqTest extends FlatSpec with PropertyChecks {
 
   it should "compare string" in {
     // 1.2 Import the right typeclass instances
-    implicit val ev: Eq[String] = ???
+    import cats.instances.string._
 
     forAll { s: String =>
       Eq[String].eqv(s, s)

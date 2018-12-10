@@ -1,7 +1,7 @@
 package fr.upem
 
-import cats.Applicative
-import cats.implicits._
+import cats.Traverse
+
 
 object Sandbox extends App {
 

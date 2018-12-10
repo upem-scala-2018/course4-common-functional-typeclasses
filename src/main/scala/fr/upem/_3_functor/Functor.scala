@@ -13,7 +13,10 @@ case class HttpHeader[A](name: String, value: A)
 
 object HttpHeader {
   // 3.4 Create a functor for HttpHeader
-  lazy implicit val functor: Functor[HttpHeader] = ???
+  lazy implicit val functor: Functor[HttpHeader] = new Functor[HttpHeader] {
+    override def map[A, B](fa: HttpHeader[A])(f: A => B): HttpHeader[B] =
+      fa.copy(value = f(fa.value))
+  }
 
   // 3.5 Can you implement an Applicative and a Monad for the HttpHeader
   // What would be the semantics of pure() and flatMap() ?
@@ -27,10 +30,24 @@ object Tree {
   case class Node[A](a: A, l: Tree[A], r: Tree[A]) extends Tree[A]
 
   // 3.6 Implement a Functor instance for Tree
-  lazy implicit val functor: Functor[Tree] = ???
+  implicit val functor: Functor[Tree] = new Functor[Tree] {
+    override def map[A, B](fa: Tree[A])(f: A => B): Tree[B] =
+      fa match {
+        case Leaf          => Leaf
+        case Node(a, l, r) => Node(f(a), map(l)(f), map(r)(f))
+      }
+  }
 
   // 3.7 Hard - Implement an Applicative instance for Tree
   // The above Functor instance can be deleted since applicative extends Functor
-  lazy implicit val applicative: Applicative[Tree] = ???
+  implicit val applicative: Applicative[Tree] = new Applicative[Tree] {
+    override def pure[A](x: A): Tree[A] = Node(x, Leaf, Leaf)
+    override def ap[A, B](ff: Tree[A => B])(fa: Tree[A]): Tree[B] =
+      (fa, ff) match {
+        case (Leaf, _)                          => Leaf
+        case (_, Leaf)                          => Leaf
+        case (Node(a, la, ra), Node(f, lf, rf)) => Node(f(a), ap(lf)(la), ap(rf)(ra))
+      }
+  }
 
 }

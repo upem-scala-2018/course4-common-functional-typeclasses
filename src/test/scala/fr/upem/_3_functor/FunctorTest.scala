@@ -11,14 +11,14 @@ class FunctorTest extends FlatSpec with Matchers with CheckLaws {
 
   "Functor" should "be available for List" in {
     // 3.1 Import the right typeclass
-    implicit val ev: Functor[List] = ???
+    import cats.instances.list._
 
     Functor[List].map(List(1, 2, 3))(i => i + 1) should equal(List(2, 3, 4))
   }
 
   it should "be available for function" in {
     // 3.2 Import the right typeclass
-    implicit val ev: Functor[List[Int] => ?] = ???
+    import cats.instances.function._
 
     val lastElem: List[Int] => Int = list => list.reverse.head
     val isPair: Int => Boolean     = _ % 2 == 0
@@ -30,7 +30,7 @@ class FunctorTest extends FlatSpec with Matchers with CheckLaws {
 
   it should "be available for function with option" in {
     // 3.3 Make the code safe for empty lists
-    implicit val ev: Functor[List[Int] => ?] = ???
+    import cats.instances.function._
 
     val lastElem: List[Int] => Option[Int]   = list => list.reverse.headOption
     val isPair: Int => Boolean               = _ % 2 == 0
@@ -56,8 +56,9 @@ class FunctorTest extends FlatSpec with Matchers with CheckLaws {
 
   "FunctorSyntax" should "be available for HttpHeader" in {
     // 3.5 Import the functor syntax and un-comment following line
-    // HttpHeader("content-type", Json).map(_ => Xml) should equal(HttpHeader("content-type", Xml))
-    ???
+    import cats.syntax.functor._
+
+    HttpHeader("content-type", Json).map(_ => Xml) should equal(HttpHeader("content-type", Xml))
   }
 
   it should "be available for Tree" in {
@@ -95,11 +96,5 @@ class FunctorTest extends FlatSpec with Matchers with CheckLaws {
     Applicative[Tree].ap(functions)(values) should equal(Node[Int](10, Leaf, Node(11, Leaf, Leaf)))
   }
 
-  {
-    import cats.instances.int._
-    import cats.instances.string._
-    import cats.instances.tuple._
-    checkAll("Applicative[Tree]", ApplicativeTests[Tree].applicative[Int, Int, String])
-  }
 
 }
