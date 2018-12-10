@@ -38,16 +38,5 @@ object Tree {
       }
   }
 
-  // 3.7 Hard - Implement an Applicative instance for Tree
-  // The above Functor instance can be deleted since applicative extends Functor
-  implicit val applicative: Applicative[Tree] = new Applicative[Tree] {
-    override def pure[A](x: A): Tree[A] = Node(x, Leaf, Leaf)
-    override def ap[A, B](ff: Tree[A => B])(fa: Tree[A]): Tree[B] =
-      (fa, ff) match {
-        case (Leaf, _)                          => Leaf
-        case (_, Leaf)                          => Leaf
-        case (Node(a, la, ra), Node(f, lf, rf)) => Node(f(a), ap(lf)(la), ap(rf)(ra))
-      }
-  }
 
 }

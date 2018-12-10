@@ -67,34 +67,5 @@ class FunctorTest extends FlatSpec with Matchers with CheckLaws {
     Functor[Tree].map(empty)(i => i * 2) should equal(Leaf)
   }
 
-  // 3.7 Hard - Implement tree applicative
-  "Applicative" should "be available for Tree" in {
-    val values    = Node[Int](5, Leaf, Leaf)
-    val functions = Node[Int => String](Integer.toString, Leaf, Leaf)
-
-    Applicative[Tree].ap(functions)(values) should equal(Node("5", Leaf, Leaf))
-  }
-
-  it should "work with empty value trees" in {
-    val values    = Leaf
-    val functions = Node[Int => Int](_ + 1, Leaf, Leaf)
-
-    Applicative[Tree].ap(functions)(values) should equal(Leaf)
-  }
-
-  it should "work with empty function trees" in {
-    val values    = Node[Int](5, Leaf, Leaf)
-    val functions = Leaf
-
-    Applicative[Tree].ap(functions)(values) should equal(Leaf)
-  }
-
-  it should "work with complex trees" in {
-    val values    = Node[Int](5, Leaf, Node(1, Node(2, Leaf, Leaf), Leaf))
-    val functions = Node[Int => Int](_ * 2, Leaf, Node(_ + 10, Leaf, Node(_ + 2, Leaf, Leaf)))
-
-    Applicative[Tree].ap(functions)(values) should equal(Node[Int](10, Leaf, Node(11, Leaf, Leaf)))
-  }
-
 
 }

@@ -49,7 +49,7 @@ trait CheckLaws extends Checkers { self: FlatSpecLike =>
     def inner(depth: Int): Arbitrary[Tree[A]] =
       Arbitrary(
         implicitly[Arbitrary[A]].arbitrary.map(a => {
-          if (Math.random() > 0.2 && depth < 4)
+          if (Math.random() > 0.2 && depth < 2)
             Node(a, inner(depth + 1).arbitrary.sample.get, inner(depth + 1).arbitrary.sample.get)
           else
             Leaf
